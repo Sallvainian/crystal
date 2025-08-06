@@ -1,0 +1,909 @@
+{
+  "@types/xterm": {
+    "current": "2.0.3",
+    "latest": "3.0.0",
+    "wanted": "2.0.3",
+    "isDeprecated": true,
+    "dependencyType": "devDependencies",
+    "latestManifest": {
+      "name": "@types/xterm",
+      "version": "3.0.0",
+      "typings": null,
+      "description": "Stub TypeScript definitions entry for xterm.js, which provides its own types definitions",
+      "main": "",
+      "scripts": {},
+      "author": "",
+      "repository": "https://github.com/sourcelair/xterm.js/",
+      "license": "MIT",
+      "dependencies": {
+        "xterm": "*"
+      },
+      "_id": "@types/xterm@3.0.0",
+      "dist": {
+        "integrity": "sha512-+VaAJQmE7E1d1ebkIh/Zdc2mbXBVwxZGGSgqwzDPpk/HKo0mNT+iX5ZrnswztHSV+CDV+bURl7Yg7PWF7IZfXQ==",
+        "shasum": "5b177010903ee1dc26fdc25d6e4e1f2490d44ce6",
+        "tarball": "https://registry.npmjs.org/@types/xterm/-/xterm-3.0.0.tgz",
+        "signatures": [
+          {
+            "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+            "sig": "MEUCIQCqvnCFCBUunRiO7T7GP3OMbxMQakIptVvmi5ffB+oeggIgBctdWX7lm4WpMirUQq5sByQIyHI/h8su/VWx6pbGeyQ="
+          }
+        ]
+      },
+      "maintainers": [
+        {
+          "name": "types",
+          "email": "ts-npm-types@microsoft.com"
+        }
+      ],
+      "_npmUser": {
+        "name": "types",
+        "email": "ts-npm-types@microsoft.com"
+      },
+      "_npmOperationalInternal": {
+        "host": "s3://npm-registry-packages",
+        "tmp": "tmp/xterm-3.0.0.tgz_1516662916064_0.35831370763480663"
+      },
+      "directories": {},
+      "deprecated": "This is a stub types definition for xterm.js (https://github.com/sourcelair/xterm.js/). xterm.js provides its own type definitions, so you don't need @types/xterm installed!"
+    }
+  },
+  "better-sqlite3": {
+    "current": "11.10.0",
+    "latest": "12.2.0",
+    "wanted": "11.10.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies",
+    "latestManifest": {
+      "name": "better-sqlite3",
+      "version": "12.2.0",
+      "description": "The fastest and simplest library for SQLite in Node.js.",
+      "homepage": "http://github.com/WiseLibs/better-sqlite3",
+      "author": {
+        "name": "Joshua Wise",
+        "email": "joshuathomaswise@gmail.com"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git://github.com/WiseLibs/better-sqlite3.git"
+      },
+      "main": "lib/index.js",
+      "engines": {
+        "node": "20.x || 22.x || 23.x || 24.x"
+      },
+      "dependencies": {
+        "bindings": "^1.5.0",
+        "prebuild-install": "^7.1.1"
+      },
+      "overrides": {
+        "prebuild": {
+          "node-abi": "4.9.0"
+        }
+      },
+      "devDependencies": {
+        "chai": "^4.3.8",
+        "cli-color": "^2.0.3",
+        "fs-extra": "^11.1.1",
+        "mocha": "^10.2.0",
+        "nodemark": "^0.3.0",
+        "prebuild": "^13.0.1",
+        "sqlite": "^5.0.1",
+        "sqlite3": "^5.1.6"
+      },
+      "scripts": {
+        "install": "prebuild-install || node-gyp rebuild --release",
+        "build-release": "node-gyp rebuild --release",
+        "build-debug": "node-gyp rebuild --debug",
+        "rebuild-release": "npm run lzz && npm run build-release",
+        "rebuild-debug": "npm run lzz && npm run build-debug",
+        "test": "mocha --exit --slow=75 --timeout=5000",
+        "benchmark": "node benchmark",
+        "download": "bash ./deps/download.sh",
+        "lzz": "lzz -hx hpp -sx cpp -k BETTER_SQLITE3 -d -hl -sl -e ./src/better_sqlite3.lzz"
+      },
+      "license": "MIT",
+      "keywords": [
+        "sql",
+        "sqlite",
+        "sqlite3",
+        "transactions",
+        "user-defined functions",
+        "aggregate functions",
+        "window functions",
+        "database"
+      ],
+      "_id": "better-sqlite3@12.2.0",
+      "gitHead": "0380025df4ba3547a24c3d340263131c07179cdf",
+      "bugs": {
+        "url": "https://github.com/WiseLibs/better-sqlite3/issues"
+      },
+      "_nodeVersion": "20.19.2",
+      "_npmVersion": "10.8.2",
+      "dist": {
+        "integrity": "sha512-eGbYq2CT+tos1fBwLQ/tkBt9J5M3JEHjku4hbvQUePCckkvVf14xWj+1m7dGoK81M/fOjFT7yM9UMeKT/+vFLQ==",
+        "shasum": "de7c3466074f2d1a5d260f510647e822e42684d2",
+        "tarball": "https://registry.npmjs.org/better-sqlite3/-/better-sqlite3-12.2.0.tgz",
+        "fileCount": 29,
+        "unpackedSize": 10202618,
+        "signatures": [
+          {
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+            "sig": "MEUCIQDUmG1RH+PiFvQ0c/FKz7AAw3J+VIExMOJhvbwLolcF/AIgZ68omF75RYsM2NP+hTc8LmbKBsyHbAsV/J6zbhHaUN0="
+          }
+        ]
+      },
+      "_npmUser": {
+        "name": "joshuawise",
+        "email": "joshuathomaswise@gmail.com",
+        "actor": {
+          "name": "joshuawise",
+          "email": "joshuathomaswise@gmail.com",
+          "type": "user"
+        }
+      },
+      "directories": {},
+      "maintainers": [
+        {
+          "name": "joshuawise",
+          "email": "joshuathomaswise@gmail.com"
+        }
+      ],
+      "_npmOperationalInternal": {
+        "host": "s3://npm-registry-packages-npm-production",
+        "tmp": "tmp/better-sqlite3_12.2.0_1751151923270_0.8927727132859937"
+      },
+      "_hasShrinkwrap": false
+    }
+  },
+  "dotenv": {
+    "current": "16.6.1",
+    "latest": "17.2.1",
+    "wanted": "16.6.1",
+    "isDeprecated": false,
+    "dependencyType": "dependencies",
+    "latestManifest": {
+      "name": "dotenv",
+      "version": "17.2.1",
+      "keywords": [
+        "dotenv",
+        "env",
+        ".env",
+        "environment",
+        "variables",
+        "config",
+        "settings"
+      ],
+      "license": "BSD-2-Clause",
+      "_id": "dotenv@17.2.1",
+      "maintainers": [
+        {
+          "name": "~jcblw",
+          "email": "jacoblowe2.0@gmail.com"
+        },
+        {
+          "name": "scottmotte",
+          "email": "scott@scottmotte.com"
+        },
+        {
+          "name": "motdotla",
+          "email": "mot@mot.la"
+        },
+        {
+          "name": "motdotenv",
+          "email": "mot@dotenv.org"
+        }
+      ],
+      "homepage": "https://github.com/motdotla/dotenv#readme",
+      "bugs": {
+        "url": "https://github.com/motdotla/dotenv/issues"
+      },
+      "dist": {
+        "shasum": "6f32e10faf014883515538dc922a0fb8765d9b32",
+        "tarball": "https://registry.npmjs.org/dotenv/-/dotenv-17.2.1.tgz",
+        "fileCount": 12,
+        "integrity": "sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==",
+        "signatures": [
+          {
+            "sig": "MEUCID0+GQsmkBdSYc5eH77ABvNm+LGsB5KJLO35ZPBUFUznAiEAtDdsBZlmlFHJ+BW/wBZjlLSiqhAdd+AaYgI5eE0hCcA=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 80536
+      },
+      "main": "lib/main.js",
+      "types": "lib/main.d.ts",
+      "browser": {
+        "fs": false
+      },
+      "engines": {
+        "node": ">=12"
+      },
+      "exports": {
+        ".": {
+          "types": "./lib/main.d.ts",
+          "default": "./lib/main.js",
+          "require": "./lib/main.js"
+        },
+        "./config": "./config.js",
+        "./config.js": "./config.js",
+        "./package.json": "./package.json",
+        "./lib/cli-options": "./lib/cli-options.js",
+        "./lib/env-options": "./lib/env-options.js",
+        "./lib/cli-options.js": "./lib/cli-options.js",
+        "./lib/env-options.js": "./lib/env-options.js"
+      },
+      "funding": "https://dotenvx.com",
+      "gitHead": "37cf55a092036ba23d9435a682e8b1ceb4f329e8",
+      "scripts": {
+        "lint": "standard",
+        "test": "tap run --allow-empty-coverage --disable-coverage --timeout=60000",
+        "pretest": "npm run lint && npm run dts-check",
+        "release": "standard-version",
+        "dts-check": "tsc --project tests/types/tsconfig.json",
+        "prerelease": "npm test",
+        "test:coverage": "tap run --show-full-coverage --timeout=60000 --coverage-report=text --coverage-report=lcov"
+      },
+      "_npmUser": {
+        "name": "motdotla",
+        "email": "mot@mot.la"
+      },
+      "repository": {
+        "url": "git://github.com/motdotla/dotenv.git",
+        "type": "git"
+      },
+      "_npmVersion": "10.9.2",
+      "description": "Loads environment variables from .env file",
+      "directories": {},
+      "_nodeVersion": "23.4.0",
+      "_hasShrinkwrap": false,
+      "devDependencies": {
+        "tap": "^19.2.0",
+        "sinon": "^14.0.1",
+        "decache": "^4.6.2",
+        "standard": "^17.0.0",
+        "typescript": "^4.8.4",
+        "@types/node": "^18.11.3",
+        "standard-version": "^9.5.0"
+      },
+      "_npmOperationalInternal": {
+        "tmp": "tmp/dotenv_17.2.1_1753389926180_0.925902174869516",
+        "host": "s3://npm-registry-packages-npm-production"
+      }
+    }
+  },
+  "electron": {
+    "current": "36.7.3",
+    "latest": "37.2.4",
+    "wanted": "36.7.3",
+    "isDeprecated": false,
+    "dependencyType": "devDependencies",
+    "latestManifest": {
+      "name": "electron",
+      "version": "37.2.4",
+      "keywords": [
+        "electron"
+      ],
+      "author": {
+        "name": "Electron Community"
+      },
+      "license": "MIT",
+      "_id": "electron@37.2.4",
+      "maintainers": [
+        {
+          "name": "electronhq",
+          "email": "marshallofsound+electronhqnpm@electronjs.org"
+        },
+        {
+          "name": "electron-nightly",
+          "email": "info+nightly-npm@electronjs.org"
+        }
+      ],
+      "homepage": "https://github.com/electron/electron#readme",
+      "bugs": {
+        "url": "https://github.com/electron/electron/issues"
+      },
+      "bin": {
+        "electron": "cli.js"
+      },
+      "dist": {
+        "shasum": "c8458dfbdbbe99753e4a6711b1b86a90338c7198",
+        "tarball": "https://registry.npmjs.org/electron/-/electron-37.2.4.tgz",
+        "fileCount": 8,
+        "integrity": "sha512-F1WDDvY60TpFwGyW+evNB5q0Em8PamcDTVIKB2NaiaKEbNC2Fabn8Wyxy5g+Anirr1K40eKGjfSJhWEUbI1TOw==",
+        "signatures": [
+          {
+            "sig": "MEUCIQCOQ35dizfp7rFgKsDqrf6hq0T4I3M9lqjz4wbqHdF5tgIgLbgg/gnTF8q0JSt15qHkQ+8hcn6m2Dt9RYYDqsmD9Io=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 1067347
+      },
+      "main": "index.js",
+      "_from": "file:/tmp/electron-npm2025623-919-1tol95i.zooj/electron-37.2.4.tgz",
+      "types": "electron.d.ts",
+      "engines": {
+        "node": ">= 12.20.55"
+      },
+      "scripts": {
+        "postinstall": "node install.js"
+      },
+      "_npmUser": {
+        "name": "electron-nightly",
+        "email": "info+nightly-npm@electronjs.org"
+      },
+      "_resolved": "/tmp/electron-npm2025623-919-1tol95i.zooj/electron-37.2.4.tgz",
+      "_integrity": "sha512-F1WDDvY60TpFwGyW+evNB5q0Em8PamcDTVIKB2NaiaKEbNC2Fabn8Wyxy5g+Anirr1K40eKGjfSJhWEUbI1TOw==",
+      "repository": {
+        "url": "git+https://github.com/electron/electron.git",
+        "type": "git"
+      },
+      "_npmVersion": "10.9.2",
+      "description": "Build cross platform desktop apps with JavaScript, HTML, and CSS",
+      "directories": {},
+      "_nodeVersion": "22.17.0",
+      "dependencies": {
+        "@types/node": "^22.7.7",
+        "extract-zip": "^2.0.1",
+        "@electron/get": "^2.0.0"
+      },
+      "_hasShrinkwrap": false,
+      "readmeFilename": "README.md",
+      "_npmOperationalInternal": {
+        "tmp": "tmp/electron_37.2.4_1753279242188_0.27382324413384684",
+        "host": "s3://npm-registry-packages-npm-production"
+      }
+    }
+  },
+  "web-streams-polyfill": {
+    "current": "3.3.3",
+    "latest": "4.1.0",
+    "wanted": "3.3.3",
+    "isDeprecated": false,
+    "dependencyType": "dependencies",
+    "latestManifest": {
+      "name": "web-streams-polyfill",
+      "version": "4.1.0",
+      "description": "Web Streams, based on the WHATWG spec reference implementation",
+      "main": "dist/ponyfill.js",
+      "module": "dist/ponyfill.mjs",
+      "types": "types/ponyfill.d.ts",
+      "exports": {
+        ".": {
+          "types": "./types/ponyfill.d.ts",
+          "import": "./dist/ponyfill.mjs",
+          "require": "./dist/ponyfill.js"
+        },
+        "./es5": {
+          "types": "./types/ponyfill.d.ts",
+          "import": "./dist/ponyfill.es5.mjs",
+          "require": "./dist/ponyfill.es5.js"
+        },
+        "./polyfill": {
+          "types": "./types/polyfill.d.ts",
+          "default": "./dist/polyfill.js"
+        },
+        "./polyfill/es5": {
+          "types": "./types/polyfill.d.ts",
+          "default": "./dist/polyfill.es5.js"
+        },
+        "./dist/*": "./dist/*",
+        "./types/*": "./types/*",
+        "./package": "./package.json",
+        "./package.json": "./package.json"
+      },
+      "scripts": {
+        "test": "npm run test:types && npm run test:unit && npm run test:wpt && npm run test:bundlers",
+        "test:wpt": "npm run test:wpt:node && npm run test:wpt:chromium && npm run test:wpt:firefox",
+        "test:wpt:node": "node --expose_gc ./test/wpt/node/run.mjs",
+        "test:wpt:chromium": "node ./test/wpt/browser/run.mjs --browser chromium",
+        "test:wpt:firefox": "node ./test/wpt/browser/run.mjs --browser firefox",
+        "test:bundlers": "npm run test:bundler:rollup && npm run test:bundler:webpack",
+        "test:bundler:rollup": "cd test/rollup && npm install && npm test",
+        "test:bundler:webpack": "cd test/webpack && npm install && npm test",
+        "test:types": "tsc -p ./test/types/tsconfig.json",
+        "test:unit": "jasmine --config=test/unit/jasmine.json",
+        "lint": "eslint \"*.mjs\" \"src/**/*.ts\"",
+        "build": "npm run build:bundle && npm run build:types",
+        "build:bundle": "rollup -c",
+        "build:types": "tsc --project . --emitDeclarationOnly --declarationDir ./lib && api-extractor run",
+        "accept:types": "npm run build:types -- --local",
+        "prepare": "npm run build"
+      },
+      "engines": {
+        "node": ">= 8"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MattiasBuelens/web-streams-polyfill.git"
+      },
+      "keywords": [
+        "streams",
+        "whatwg",
+        "polyfill"
+      ],
+      "author": {
+        "name": "Mattias Buelens",
+        "email": "mattias@buelens.com"
+      },
+      "contributors": [
+        {
+          "name": "Diwank Singh",
+          "email": "diwank.singh@gmail.com"
+        }
+      ],
+      "license": "MIT",
+      "bugs": {
+        "url": "https://github.com/MattiasBuelens/web-streams-polyfill/issues"
+      },
+      "homepage": "https://github.com/MattiasBuelens/web-streams-polyfill#readme",
+      "devDependencies": {
+        "@eslint/js": "^9.17.0",
+        "@microsoft/api-extractor": "^7.48.1",
+        "@rollup/plugin-inject": "^5.0.5",
+        "@rollup/plugin-replace": "^6.0.2",
+        "@rollup/plugin-strip": "^3.0.4",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@stylistic/eslint-plugin": "^2.12.1",
+        "@types/node": "^20.17.11",
+        "eslint": "^9.17.0",
+        "globals": "^15.14.0",
+        "jasmine": "^5.5.0",
+        "micromatch": "^4.0.8",
+        "minimist": "^1.2.8",
+        "playwright": "^1.49.1",
+        "rollup": "^4.29.2",
+        "st": "^3.0.1",
+        "tslib": "^2.8.1",
+        "typescript": "^5.7.2",
+        "typescript-eslint": "^8.19.0",
+        "wpt-runner": "^6.0.0"
+      },
+      "_id": "web-streams-polyfill@4.1.0",
+      "gitHead": "ea1b0b7dcc6558192226ab6e2256611b138b1b9d",
+      "_nodeVersion": "22.12.0",
+      "_npmVersion": "10.9.0",
+      "dist": {
+        "integrity": "sha512-A7Jxrg7+eV+eZR/CIdESDnRGFb6/bcKukGvJBB5snI6cw3is1c2qamkYstC1bY1p08TyMRlN9eTMkxmnKJBPBw==",
+        "shasum": "3ba095d0eb3ef6377cd126e8354b2cdba286e0d3",
+        "tarball": "https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-4.1.0.tgz",
+        "fileCount": 12,
+        "unpackedSize": 442126,
+        "attestations": {
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/web-streams-polyfill@4.1.0",
+          "provenance": {
+            "predicateType": "https://slsa.dev/provenance/v1"
+          }
+        },
+        "signatures": [
+          {
+            "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+            "sig": "MEYCIQCVjeDAmIHYM06I+G+reIXbuoaVvOrJIujVyEkFE/SHXAIhAJIV1TFVdorXBuqbSG/utgzmYH7wbnOLg76PJbP9gII5"
+          }
+        ]
+      },
+      "_npmUser": {
+        "name": "mattiasbuelens",
+        "email": "mattias.buelens@gmail.com"
+      },
+      "directories": {},
+      "maintainers": [
+        {
+          "name": "diwank",
+          "email": "diwank.singh@gmail.com"
+        },
+        {
+          "name": "whiterabbit1983",
+          "email": "asmatic075@gmail.com"
+        },
+        {
+          "name": "mattiasbuelens",
+          "email": "mattias.buelens@gmail.com"
+        }
+      ],
+      "_npmOperationalInternal": {
+        "host": "s3://npm-registry-packages-npm-production",
+        "tmp": "tmp/web-streams-polyfill_4.1.0_1736109861424_0.2548391284379421"
+      },
+      "_hasShrinkwrap": false
+    }
+  },
+  "@anthropic-ai/sdk": {
+    "current": "0.27.3",
+    "latest": "0.57.0",
+    "wanted": "0.27.3",
+    "isDeprecated": false,
+    "dependencyType": "dependencies",
+    "latestManifest": {
+      "name": "@anthropic-ai/sdk",
+      "version": "0.57.0",
+      "description": "The official TypeScript library for the Anthropic API",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "types": "./index.d.ts",
+      "main": "./index.js",
+      "type": "commonjs",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/anthropics/anthropic-sdk-typescript.git"
+      },
+      "license": "MIT",
+      "packageManager": "yarn@1.22.22",
+      "private": false,
+      "scripts": {
+        "test": "./scripts/test",
+        "build": "./scripts/build-all",
+        "format": "./scripts/format",
+        "tsn": "ts-node -r tsconfig-paths/register",
+        "lint": "./scripts/lint",
+        "fix": "./scripts/format"
+      },
+      "dependencies": {},
+      "imports": {
+        "@anthropic-ai/sdk": ".",
+        "@anthropic-ai/sdk/*": "./src/*"
+      },
+      "bin": {
+        "anthropic-ai-sdk": "bin/cli"
+      },
+      "exports": {
+        ".": {
+          "require": {
+            "types": "./index.d.ts",
+            "default": "./index.js"
+          },
+          "types": "./index.d.mts",
+          "default": "./index.mjs"
+        },
+        "./_vendor/*.mjs": {
+          "default": "./_vendor/*.mjs"
+        },
+        "./_vendor/*.js": {
+          "default": "./_vendor/*.js"
+        },
+        "./_vendor/*": {
+          "import": "./_vendor/*.mjs",
+          "require": "./_vendor/*.js"
+        },
+        "./api-promise": {
+          "import": "./api-promise.mjs",
+          "require": "./api-promise.js"
+        },
+        "./api-promise.js": {
+          "default": "./api-promise.js"
+        },
+        "./api-promise.mjs": {
+          "default": "./api-promise.mjs"
+        },
+        "./client": {
+          "import": "./client.mjs",
+          "require": "./client.js"
+        },
+        "./client.js": {
+          "default": "./client.js"
+        },
+        "./client.mjs": {
+          "default": "./client.mjs"
+        },
+        "./core/*.mjs": {
+          "default": "./core/*.mjs"
+        },
+        "./core/*.js": {
+          "default": "./core/*.js"
+        },
+        "./core/*": {
+          "import": "./core/*.mjs",
+          "require": "./core/*.js"
+        },
+        "./error": {
+          "import": "./error.mjs",
+          "require": "./error.js"
+        },
+        "./error.js": {
+          "default": "./error.js"
+        },
+        "./error.mjs": {
+          "default": "./error.mjs"
+        },
+        "./index": {
+          "import": "./index.mjs",
+          "require": "./index.js"
+        },
+        "./index.js": {
+          "default": "./index.js"
+        },
+        "./index.mjs": {
+          "default": "./index.mjs"
+        },
+        "./lib/*.mjs": {
+          "default": "./lib/*.mjs"
+        },
+        "./lib/*.js": {
+          "default": "./lib/*.js"
+        },
+        "./lib/*": {
+          "import": "./lib/*.mjs",
+          "require": "./lib/*.js"
+        },
+        "./pagination": {
+          "import": "./pagination.mjs",
+          "require": "./pagination.js"
+        },
+        "./pagination.js": {
+          "default": "./pagination.js"
+        },
+        "./pagination.mjs": {
+          "default": "./pagination.mjs"
+        },
+        "./resource": {
+          "import": "./resource.mjs",
+          "require": "./resource.js"
+        },
+        "./resource.js": {
+          "default": "./resource.js"
+        },
+        "./resource.mjs": {
+          "default": "./resource.mjs"
+        },
+        "./resources/*.mjs": {
+          "default": "./resources/*.mjs"
+        },
+        "./resources/*.js": {
+          "default": "./resources/*.js"
+        },
+        "./resources/*": {
+          "import": "./resources/*.mjs",
+          "require": "./resources/*.js"
+        },
+        "./resources": {
+          "import": "./resources.mjs",
+          "require": "./resources.js"
+        },
+        "./resources.js": {
+          "default": "./resources.js"
+        },
+        "./resources.mjs": {
+          "default": "./resources.mjs"
+        },
+        "./streaming": {
+          "import": "./streaming.mjs",
+          "require": "./streaming.js"
+        },
+        "./streaming.js": {
+          "default": "./streaming.js"
+        },
+        "./streaming.mjs": {
+          "default": "./streaming.mjs"
+        },
+        "./uploads": {
+          "import": "./uploads.mjs",
+          "require": "./uploads.js"
+        },
+        "./uploads.js": {
+          "default": "./uploads.js"
+        },
+        "./uploads.mjs": {
+          "default": "./uploads.mjs"
+        },
+        "./version": {
+          "import": "./version.mjs",
+          "require": "./version.js"
+        },
+        "./version.js": {
+          "default": "./version.js"
+        },
+        "./version.mjs": {
+          "default": "./version.mjs"
+        }
+      },
+      "licenseText": "Copyright 2023 Anthropic, PBC.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n",
+      "_id": "@anthropic-ai/sdk@0.57.0",
+      "dist": {
+        "shasum": "d2ef7bd3a80b07e41df79600f0a797db94434060",
+        "integrity": "sha512-z5LMy0MWu0+w2hflUgj4RlJr1R+0BxKXL7ldXTO8FasU8fu599STghO+QKwId2dAD0d464aHtU+ChWuRHw4FNw==",
+        "tarball": "https://registry.npmjs.org/@anthropic-ai/sdk/-/sdk-0.57.0.tgz",
+        "fileCount": 587,
+        "unpackedSize": 1948733,
+        "signatures": [
+          {
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+            "sig": "MEQCIBDMJPM9qHaPkunCcosts4jYFht24QbgtfzbmK9K7RCtAiBITyz52w1h9HRbweI6y9UEkwYjQEUnqO6r5MnhxWNAvg=="
+          }
+        ]
+      },
+      "_npmUser": {
+        "name": "zak-anthropic",
+        "email": "zak@anthropic.com"
+      },
+      "directories": {},
+      "maintainers": [
+        {
+          "name": "zak-anthropic",
+          "email": "zak@anthropic.com"
+        },
+        {
+          "name": "benjmann",
+          "email": "ben@anthropic.com"
+        },
+        {
+          "name": "nikhil-anthropic",
+          "email": "nikhil@anthropic.com"
+        },
+        {
+          "name": "ejlangev-ant",
+          "email": "ethan.langevin@anthropic.com"
+        },
+        {
+          "name": "jv-anthropic",
+          "email": "jv@anthropic.com"
+        },
+        {
+          "name": "sbidasaria",
+          "email": "sbidasaria@anthropic.com"
+        },
+        {
+          "name": "wolffiex",
+          "email": "wolffiex@anthropic.com"
+        },
+        {
+          "name": "igorkofman",
+          "email": "kofman@gmail.com"
+        },
+        {
+          "name": "felixrieseberg-anthropic",
+          "email": "f@anthropic.com"
+        }
+      ],
+      "_npmOperationalInternal": {
+        "host": "s3://npm-registry-packages-npm-production",
+        "tmp": "tmp/sdk_0.57.0_1753102034822_0.17308809861115182"
+      },
+      "_hasShrinkwrap": false
+    }
+  },
+  "@homebridge/node-pty-prebuilt-multiarch": {
+    "current": "0.12.0",
+    "latest": "0.13.1",
+    "wanted": "0.12.0",
+    "isDeprecated": false,
+    "dependencyType": "dependencies",
+    "latestManifest": {
+      "name": "@homebridge/node-pty-prebuilt-multiarch",
+      "version": "0.13.1",
+      "keywords": [
+        "pty",
+        "tty",
+        "terminal",
+        "pseudoterminal",
+        "forkpty",
+        "openpty"
+      ],
+      "author": {
+        "name": "Microsoft Corporation"
+      },
+      "license": "MIT",
+      "_id": "@homebridge/node-pty-prebuilt-multiarch@0.13.1",
+      "maintainers": [
+        {
+          "name": "oznu",
+          "email": "dev@oz.nu"
+        },
+        {
+          "name": "northernman",
+          "email": "buyminivan-northern@yahoo.ca"
+        },
+        {
+          "name": "supereg",
+          "email": "mail@anderl-bauer.de"
+        },
+        {
+          "name": "khaost",
+          "email": "khaos.tian@gmail.com"
+        },
+        {
+          "name": "ebaauw",
+          "email": "erik.baauw@xs4all.nl"
+        },
+        {
+          "name": "donavanbecker",
+          "email": "donavan.becker@icloud.com"
+        },
+        {
+          "name": "dustin.greif",
+          "email": "dustin.greif@gmail.com"
+        },
+        {
+          "name": "nfarina",
+          "email": "nfarina@gmail.com"
+        },
+        {
+          "name": "bwp91",
+          "email": "bwp91@icloud.com"
+        }
+      ],
+      "homepage": "https://github.com/homebridge/node-pty-prebuilt-multiarch",
+      "bugs": {
+        "url": "https://github.com/homebridge/node-pty-prebuilt-multiarch/issues"
+      },
+      "dist": {
+        "shasum": "ab01c3178cf8746003cfa538913e7e90383daa24",
+        "tarball": "https://registry.npmjs.org/@homebridge/node-pty-prebuilt-multiarch/-/node-pty-prebuilt-multiarch-0.13.1.tgz",
+        "fileCount": 317,
+        "integrity": "sha512-ccQ60nMcbEGrQh0U9E6x0ajW9qJNeazpcM/9CH6J8leyNtJgb+gu24WTBAfBUVeO486ZhscnaxLEITI2HXwhow==",
+        "signatures": [
+          {
+            "sig": "MEUCIErXNiRPMwf1im9vG/E/hzJkTG3Ef+Nca3RhZThUGyjLAiEA/Pwq9FuJ6Kse/zOpbmzELCXmaNK/VhTvqvC3ZLeku+s=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 7184156
+      },
+      "main": "./lib/index.js",
+      "types": "./typings/node-pty.d.ts",
+      "engines": {
+        "node": ">=18.0.0 <25.0.0"
+      },
+      "gitHead": "e1b7fd715b7d1371825c5287dd66101ac474eab2",
+      "scripts": {
+        "lint": "eslint -c .eslintrc.js --ext .ts src/",
+        "test": "cross-env NODE_ENV=test mocha -R spec --exit lib/*.test.js",
+        "build": "tsc -b ./src/tsconfig.json",
+        "watch": "tsc -b -w ./src/tsconfig.json",
+        "install": "node scripts/check-prebuild.js || prebuild-install --verbose || node scripts/install.js",
+        "prepare": "npm run build",
+        "posttest": "npm run lint",
+        "validate": "node scripts/check-prebuild.js || prebuild-install --verbose",
+        "postinstall": "node scripts/post-install.js",
+        "prepublishOnly": "npm run build"
+      },
+      "_npmUser": {
+        "name": "northernman",
+        "actor": {
+          "name": "northernman",
+          "type": "user",
+          "email": "buyminivan-northern@yahoo.ca"
+        },
+        "email": "buyminivan-northern@yahoo.ca"
+      },
+      "overrides": {
+        "prebuild": {
+          "node-abi": "^3.75.0"
+        }
+      },
+      "repository": {
+        "url": "git://github.com/homebridge/node-pty-prebuilt-multiarch.git",
+        "type": "git"
+      },
+      "_npmVersion": "10.9.2",
+      "description": "Fork pseudoterminals in Node.JS",
+      "directories": {},
+      "_nodeVersion": "22.16.0",
+      "dependencies": {
+        "node-addon-api": "^7.1.0",
+        "prebuild-install": "^7.1.2"
+      },
+      "_hasShrinkwrap": false,
+      "devDependencies": {
+        "mocha": "10",
+        "eslint": "^6.8.0",
+        "ps-list": "^6.0.0",
+        "node-abi": "^3.75.0",
+        "node-gyp": "=10.1.0",
+        "prebuild": "^13.0.1",
+        "cross-env": "^5.1.4",
+        "typescript": "^3.8.3",
+        "@types/node": "12",
+        "prebuildify": "^5.0.1",
+        "@types/mocha": "^7.0.2",
+        "@typescript-eslint/parser": "^2.27.0",
+        "@typescript-eslint/eslint-plugin": "^2.27.0"
+      },
+      "_npmOperationalInternal": {
+        "tmp": "tmp/node-pty-prebuilt-multiarch_0.13.1_1751546407447_0.8880576222023682",
+        "host": "s3://npm-registry-packages-npm-production"
+      }
+    }
+  }
+}

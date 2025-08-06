@@ -3,6 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 import { ShellDetector } from './shellDetector';
+import { logger } from './simpleLogger';
 
 // Try to import app from electron (might not be available in all contexts)
 let app: any;
@@ -28,16 +29,12 @@ function getPathSeparator(): string {
 export function getShellPath(): string {
   // In packaged apps, always refresh PATH on first call to avoid cached restricted PATH
   if (cachedPath && !isFirstCall) {
-    console.log('[ShellPath] Using cached PATH');
+    logger.debug('Using cached PATH');
     return cachedPath;
   }
   isFirstCall = false;
 
-  console.log('[ShellPath] Starting PATH detection...');
-  console.log(`[ShellPath] Platform: ${process.platform}`);
-  console.log(`[ShellPath] Current process PATH: ${process.env.PATH ? process.env.PATH.substring(0, 200) + '...' : 'not set'}`);
-  console.log(`[ShellPath] Shell environment: ${process.env.SHELL || 'not set'}`);
-  console.log(`[ShellPath] Home directory: ${os.homedir()}`);
+  logger.info(`Starting PATH detection for ${process.platform}`);
 
   const isWindows = process.platform === 'win32';
   const pathSep = getPathSeparator();
@@ -47,7 +44,7 @@ export function getShellPath(): string {
     
     if (isWindows) {
       // On Windows, use cmd.exe to get PATH
-      console.log('Getting Windows PATH using cmd.exe');
+      logger.debug('Getting Windows PATH using cmd.exe');
       
       shellPath = execSync('echo %PATH%', {
         encoding: 'utf8',
@@ -79,7 +76,7 @@ export function getShellPath(): string {
       const shell = shellInfo.path;
       const isLinux = process.platform === 'linux';
       
-      console.log(`[ShellPath] Detected shell: ${shell} (${shellInfo.name})`);
+      logger.debug(`Detected shell: ${shell} (${shellInfo.name})`);
       
       // For Linux, avoid slow interactive shell startup
       // Use non-interactive mode for better performance
@@ -87,15 +84,12 @@ export function getShellPath(): string {
         ? `${shell} -c 'echo $PATH'`  // Fast non-interactive mode for Linux
         : `${shell} -l -i -c 'echo $PATH'`;  // Keep login shell for macOS
       
-      console.log(`[ShellPath] Unix/Linux PATH detection - Shell: ${shell}, isLinux: ${isLinux}`);
-      console.log(`[ShellPath] Shell command: ${shellCommand}`);
-      
       // Execute the command to get the PATH
       // For packaged apps, ALWAYS use login shell to get the user's real PATH
       const isPackaged = process.env.NODE_ENV === 'production' || (process as any).pkg || app?.isPackaged;
       
       if (isPackaged) {
-        console.log('Running in packaged app, using login shell to get full PATH...');
+        logger.debug('Running in packaged app, using login shell to get full PATH');
         
         // Use minimal base PATH - just enough to find the shell
         const minimalPath = '/usr/bin:/bin';
@@ -120,7 +114,7 @@ export function getShellPath(): string {
           }
           
           const fullCommand = `${shell} -c '${sourceCommand}echo $PATH'`;
-          console.log('Executing shell command to get PATH:', fullCommand);
+          logger.debug('Executing shell command to get PATH');
           
           shellPath = execSync(fullCommand, {
             encoding: 'utf8',
@@ -134,9 +128,9 @@ export function getShellPath(): string {
               ZDOTDIR: process.env.ZDOTDIR || homeDir
             }
           }).trim();
-          console.log('Successfully loaded user PATH from shell config files');
+          logger.debug('Successfully loaded user PATH from shell config files');
         } catch (error) {
-          console.error('Failed to load PATH from shell config:', error);
+          logger.debug('Failed to load PATH from shell config, trying login shell');
           
           // Try the standard login shell approach
           try {
@@ -150,9 +144,9 @@ export function getShellPath(): string {
                 HOME: os.homedir()
               }
             }).trim();
-            console.log('Loaded PATH using login shell flags');
+            logger.debug('Loaded PATH using login shell flags');
           } catch (loginError) {
-            console.error('Failed to load PATH from login shell:', loginError);
+            logger.warn('Failed to load PATH from login shell, using fallback');
             // Fallback to current PATH + common locations
             shellPath = process.env.PATH || '';
           }
@@ -165,25 +159,23 @@ export function getShellPath(): string {
             timeout: 2000,
             env: process.env
           }).trim();
-          console.log(`[ShellPath] Quick PATH retrieval succeeded`);
+          logger.debug('Quick PATH retrieval succeeded');
         } catch (quickError) {
-          console.log(`[ShellPath] Quick PATH retrieval failed: ${quickError instanceof Error ? quickError.message : quickError}`);
-          console.log(`[ShellPath] Falling back to login shell approach...`);
+          logger.debug('Quick PATH retrieval failed, falling back to login shell');
           shellPath = execSync(shellCommand, {
             encoding: 'utf8',
             timeout: isLinux ? 3000 : 10000,  // Shorter timeout for Linux
             env: process.env
           }).trim();
-          console.log(`[ShellPath] Login shell PATH retrieval succeeded`);
+          logger.debug('Login shell PATH retrieval succeeded');
         }
       }
     }
     
-    console.log(`[ShellPath] Retrieved shell PATH (${shellPath.split(pathSep).length} entries): ${shellPath.substring(0, 200)}...`);
+    logger.info(`Retrieved shell PATH with ${shellPath.split(pathSep).length} entries`);
     
     // Combine with current process PATH to ensure we don't lose anything
     const currentPath = process.env.PATH || '';
-    console.log(`[ShellPath] Current process PATH has ${currentPath.split(pathSep).length} entries`);
     
     // Also include npm global bin directories
     const additionalPaths: string[] = [];
@@ -191,7 +183,7 @@ export function getShellPath(): string {
     
     // Skip npm/yarn checks on Linux for better performance (they're usually in PATH already)
     if (!isLinux) {
-      console.log(`[ShellPath] Checking for npm/yarn global paths (non-Linux)...`);
+      logger.debug('Checking for npm/yarn global paths');
       // Try to get npm global bin directory
       try {
         const npmBin = execSync('npm bin -g', { 
@@ -271,19 +263,15 @@ export function getShellPath(): string {
     
     cachedPath = Array.from(combinedPaths).filter(p => p).join(pathSep);
     const pathEntries = cachedPath.split(pathSep);
-    console.log(`[ShellPath] Final combined PATH has ${pathEntries.length} entries`);
-    console.log(`[ShellPath] Added ${additionalPaths.length} additional paths`);
-    console.log(`[ShellPath] First few PATH entries: ${pathEntries.slice(0, 5).join(', ')}`);
-    console.log(`[ShellPath] PATH loading completed successfully`);
+    logger.info(`PATH loading completed - ${pathEntries.length} total entries, ${additionalPaths.length} additional paths`);
     
     return cachedPath;
   } catch (error) {
-    console.error('[ShellPath] ERROR: Failed to get shell PATH:', error);
-    console.error(`[ShellPath] Error details: ${error instanceof Error ? error.stack : 'No stack trace available'}`);
+    logger.error('Failed to get shell PATH:', error);
     
     if (!isWindows) {
       // Try alternative method: read shell config files directly (Unix/macOS only)
-      console.log('[ShellPath] Attempting fallback: reading shell config files directly...');
+      logger.debug('Attempting fallback: reading shell config files directly');
       try {
         const homeDir = os.homedir();
         const shellConfigPaths = [
@@ -294,17 +282,15 @@ export function getShellPath(): string {
           path.join(homeDir, '.zprofile')
         ];
         
-        console.log(`[ShellPath] Checking shell config files: ${shellConfigPaths.join(', ')}`);
         let extractedPaths: string[] = [];
         
         for (const configPath of shellConfigPaths) {
           if (fs.existsSync(configPath)) {
-            console.log(`[ShellPath] Reading config file: ${configPath}`);
+            logger.debug(`Reading config file: ${path.basename(configPath)}`);
             const content = fs.readFileSync(configPath, 'utf8');
             // Look for PATH exports
             const pathMatches = content.match(/export\s+PATH=["']?([^"'\n]+)["']?/gm);
             if (pathMatches) {
-              console.log(`[ShellPath] Found ${pathMatches.length} PATH exports in ${configPath}`);
               pathMatches.forEach(match => {
                 const pathValue = match.replace(/export\s+PATH=["']?/, '').replace(/["']?$/, '');
                 // Expand $PATH references
@@ -319,17 +305,15 @@ export function getShellPath(): string {
         }
         
         if (extractedPaths.length > 0) {
-          console.log(`[ShellPath] Found ${extractedPaths.length} PATH entries from config files`);
           const combinedPaths = new Set(extractedPaths.join(pathSep).split(pathSep).filter(p => p));
           cachedPath = Array.from(combinedPaths).join(pathSep);
-          console.log(`[ShellPath] Fallback successful - PATH has ${cachedPath.split(pathSep).length} entries`);
+          logger.info(`Fallback successful - PATH has ${cachedPath.split(pathSep).length} entries`);
           return cachedPath;
         } else {
-          console.log('[ShellPath] No PATH entries found in config files');
+          logger.debug('No PATH entries found in config files');
         }
       } catch (configError) {
-        console.error('[ShellPath] ERROR: Failed to read shell config files:', configError);
-        console.error(`[ShellPath] Config error details: ${configError instanceof Error ? configError.stack : 'No stack trace'}`);
+        logger.debug('Failed to read shell config files');
       }
     }
     
@@ -338,9 +322,7 @@ export function getShellPath(): string {
       ? process.env.PATH || 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem'
       : process.env.PATH || '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin';
     
-    console.error(`[ShellPath] CRITICAL: Using final fallback PATH`);
-    console.error(`[ShellPath] Fallback PATH: ${fallbackPath}`);
-    console.error(`[ShellPath] This may indicate a serious PATH loading issue on ${process.platform}`);
+    logger.warn(`Using final fallback PATH - this may indicate a PATH loading issue on ${process.platform}`);
     
     return fallbackPath;
   }
@@ -357,34 +339,30 @@ export function clearShellPathCache(): void {
  * Find an executable in the shell PATH
  */
 export function findExecutableInPath(executable: string): string | null {
-  console.log(`[ShellPath] Finding executable: ${executable}`);
+  logger.debug(`Finding executable: ${executable}`);
   const shellPath = getShellPath();
   const pathSep = getPathSeparator();
   const paths = shellPath.split(pathSep);
   const isWindows = process.platform === 'win32';
   
-  console.log(`[ShellPath] Searching in ${paths.length} PATH directories`);
-  
-  // On Windows, executables might have .exe, .cmd, or .bat extensions
+  // On Windows, executables might have .exe, .cmd, .bat, or .ps1 extensions
   const executableNames = isWindows 
-    ? [executable, `${executable}.exe`, `${executable}.cmd`, `${executable}.bat`]
+    ? [executable, `${executable}.exe`, `${executable}.cmd`, `${executable}.bat`, `${executable}.ps1`]
     : [executable];
   
-  let searchedPaths = 0;
   for (const dir of paths) {
     for (const execName of executableNames) {
       const fullPath = path.join(dir, execName);
-      searchedPaths++;
       try {
         if (isWindows) {
           // On Windows, check if file exists
           fs.accessSync(fullPath, fs.constants.F_OK);
-          console.log(`[ShellPath] Found executable at: ${fullPath}`);
+          logger.debug(`Found executable at: ${fullPath}`);
           return fullPath;
         } else {
           // On Unix, check if the executable exists and is executable
           execSync(`test -x "${fullPath}"`, { stdio: 'ignore' });
-          console.log(`[ShellPath] Found executable at: ${fullPath}`);
+          logger.debug(`Found executable at: ${fullPath}`);
           return fullPath;
         }
       } catch {
@@ -393,7 +371,6 @@ export function findExecutableInPath(executable: string): string | null {
     }
   }
   
-  console.error(`[ShellPath] Executable '${executable}' not found after searching ${searchedPaths} paths`);
-  console.error(`[ShellPath] First few paths searched: ${paths.slice(0, 5).join(', ')}`);
+  logger.warn(`Executable '${executable}' not found in PATH (${paths.length} directories searched)`);
   return null;
 }

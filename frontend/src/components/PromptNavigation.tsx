@@ -124,37 +124,56 @@ export function PromptNavigation({ sessionId, onNavigateToPrompt }: PromptNaviga
     }
   };
 
+  const fetchPrompts = async () => {
+    if (!sessionId) return;
+    
+    setIsLoading(true);
+    try {
+      const response = await API.sessions.getPrompts(sessionId);
+      if (response.success) {
+        // Log the timestamps to debug format issues
+        console.log('Fetched prompts with timestamps:', response.data.map((p: PromptMarker) => ({
+          id: p.id,
+          raw_timestamp: p.timestamp,
+          parsed_timestamp: parseTimestamp(p.timestamp).toISOString(),
+          completion_timestamp: p.completion_timestamp,
+          parsed_completion: p.completion_timestamp ? parseTimestamp(p.completion_timestamp).toISOString() : null,
+          prompt_text: p.prompt_text.substring(0, 50) + '...'
+        })));
+        setPrompts(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching prompt markers:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!sessionId) return;
-
-    const fetchPrompts = async () => {
-      setIsLoading(true);
-      try {
-        const response = await API.sessions.getPrompts(sessionId);
-        if (response.success) {
-          // Log the timestamps to debug format issues
-          console.log('Fetched prompts with timestamps:', response.data.map((p: PromptMarker) => ({
-            id: p.id,
-            raw_timestamp: p.timestamp,
-            parsed_timestamp: parseTimestamp(p.timestamp).toISOString(),
-            completion_timestamp: p.completion_timestamp,
-            parsed_completion: p.completion_timestamp ? parseTimestamp(p.completion_timestamp).toISOString() : null,
-            prompt_text: p.prompt_text.substring(0, 50) + '...'
-          })));
-          setPrompts(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching prompt markers:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
     fetchPrompts();
     
     // Only refresh prompts when session status changes, not on a timer
     // This reduces unnecessary API calls from every 5 seconds to only when needed
   }, [sessionId, activeSession?.status]);
+
+  // Listen for prompt completion events
+  useEffect(() => {
+    if (!sessionId) return;
+
+    const unsubscribe = window.electronAPI.events.onPromptCompleted(({ sessionId: completedSessionId }) => {
+      console.log('[PromptNavigation] Prompt completed event received for session:', completedSessionId);
+      if (completedSessionId === sessionId) {
+        console.log('[PromptNavigation] Refreshing prompts due to completion event');
+        fetchPrompts();
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [sessionId]);
 
   // Use requestAnimationFrame for smooth UI updates instead of setInterval
   useEffect(() => {

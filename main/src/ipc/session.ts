@@ -486,6 +486,14 @@ export function registerSessionHandlers(ipcMain: IpcMain, services: AppServices)
       const outputs = await sessionManager.getSessionOutputs(sessionId);
       console.log(`[IPC] Retrieved ${outputs.length} outputs for session ${sessionId}`);
       
+      // Debug: Log output types
+      const outputTypeCounts: Record<string, number> = {};
+      outputs.forEach(output => {
+        const key = output.type === 'json' ? `json:${output.data?.type || 'unknown'}` : output.type;
+        outputTypeCounts[key] = (outputTypeCounts[key] || 0) + 1;
+      });
+      console.log(`[IPC] Output types for session ${sessionId}:`, outputTypeCounts);
+      
       // Refresh git status when session is loaded/viewed
       const session = await sessionManager.getSession(sessionId);
       if (session && !session.archived) {
@@ -500,16 +508,19 @@ export function registerSessionHandlers(ipcMain: IpcMain, services: AppServices)
         if (output.type === 'json') {
           // Generate formatted output from JSON
           const outputText = formatJsonForOutputEnhanced(output.data);
-          if (outputText) {
-            // Return as stdout for the Output view
-            return {
-              ...output,
-              type: 'stdout' as const,
-              data: outputText
-            };
+          
+          // Log for debugging if output is empty or very short
+          if (!outputText || outputText.trim().length === 0) {
+            console.warn(`[IPC] Empty output text generated for JSON message:`, JSON.stringify(output.data).substring(0, 200));
           }
-          // If no output format can be generated, skip this JSON message
-          return null;
+          
+          // Always return the transformed output, even if it's empty
+          // The formatters should always return something, but just in case
+          return {
+            ...output,
+            type: 'stdout' as const,
+            data: outputText || `[Empty response from message type: ${output.data?.type || 'unknown'}]`
+          };
         }
         // Pass through all other output types including 'error'
         return output; 

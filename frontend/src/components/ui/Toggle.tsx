@@ -70,7 +70,7 @@ export const Toggle: React.FC<ToggleProps> = ({
         onClick={() => !disabled && handleChange(!isPressed)}
         className={cn(
           'px-3 py-1.5 rounded-md text-sm font-medium transition-all',
-          'focus:outline-none focus:ring-2 focus:ring-interactive focus:ring-offset-2',
+          'focus:outline-none focus:ring-2 focus:ring-interactive focus:ring-offset-0',
           isPressed 
             ? variant === 'warning' 
               ? 'bg-status-warning/20 text-status-warning border border-status-warning/30'
@@ -97,7 +97,7 @@ export const Toggle: React.FC<ToggleProps> = ({
       onClick={() => !disabled && handleChange(!isPressed)}
       disabled={disabled}
       className={cn(
-        'relative inline-flex items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-interactive focus:ring-offset-2',
+        'relative inline-flex items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-interactive focus:ring-offset-0',
         sizes.container,
         isPressed ? 'bg-interactive' : 'bg-surface-secondary border border-border-primary',
         disabled && 'opacity-50 cursor-not-allowed',

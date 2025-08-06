@@ -1,6 +1,7 @@
 import { execSync as nodeExecSync, ExecSyncOptions, ExecSyncOptionsWithStringEncoding, ExecSyncOptionsWithBufferEncoding, exec, ExecOptions } from 'child_process';
 import { promisify } from 'util';
 import { getShellPath } from './shellPath';
+import { logger } from './simpleLogger';
 
 const nodeExecAsync = promisify(exec);
 
@@ -8,9 +9,7 @@ class CommandExecutor {
   execSync(command: string, options: ExecSyncOptionsWithStringEncoding): string;
   execSync(command: string, options?: ExecSyncOptionsWithBufferEncoding): Buffer;
   execSync(command: string, options?: ExecSyncOptions): string | Buffer {
-    // Log the command being executed
-    const cwd = options?.cwd || process.cwd();
-    console.log(`[CommandExecutor] Executing: ${command} in ${cwd}`);
+    logger.debug(`Executing: ${command.substring(0, 50)}${command.length > 50 ? '...' : ''}`);
 
     // Get enhanced shell PATH
     const shellPath = getShellPath();
@@ -27,30 +26,16 @@ class CommandExecutor {
 
     try {
       const result = nodeExecSync(command, enhancedOptions as any);
-      
-      // Log success with a preview of the result
-      if (result) {
-        const resultStr = result.toString();
-        const lines = resultStr.split('\n');
-        const preview = lines[0].substring(0, 100) + 
-                        (lines.length > 1 ? ` ... (${lines.length} lines)` : '');
-        console.log(`[CommandExecutor] Success: ${preview}`);
-      }
-      
+      logger.debug(`Command succeeded`);
       return result;
     } catch (error: any) {
-      // Log error
-      console.error(`[CommandExecutor] Failed: ${command}`);
-      console.error(`[CommandExecutor] Error: ${error.message}`);
-      
+      logger.error(`Command failed: ${command.substring(0, 50)}${command.length > 50 ? '...' : ''} - ${error.message}`);
       throw error;
     }
   }
 
   async execAsync(command: string, options?: ExecOptions & { timeout?: number }): Promise<{ stdout: string; stderr: string }> {
-    // Log the command being executed
-    const cwd = options?.cwd || process.cwd();
-    console.log(`[CommandExecutor] Executing async: ${command} in ${cwd}`);
+    logger.debug(`Executing async: ${command.substring(0, 50)}${command.length > 50 ? '...' : ''}`);
 
     // Get enhanced shell PATH
     const shellPath = getShellPath();
@@ -71,21 +56,10 @@ class CommandExecutor {
 
     try {
       const result = await nodeExecAsync(command, enhancedOptions);
-      
-      // Log success with a preview of the result
-      if (result.stdout) {
-        const lines = result.stdout.split('\n');
-        const preview = lines[0].substring(0, 100) + 
-                        (lines.length > 1 ? ` ... (${lines.length} lines)` : '');
-        console.log(`[CommandExecutor] Async Success: ${preview}`);
-      }
-      
+      logger.debug(`Async command succeeded`);
       return result;
     } catch (error: any) {
-      // Log error
-      console.error(`[CommandExecutor] Async Failed: ${command}`);
-      console.error(`[CommandExecutor] Async Error: ${error.message}`);
-      
+      logger.error(`Async command failed: ${command.substring(0, 50)}${command.length > 50 ? '...' : ''} - ${error.message}`);
       throw error;
     }
   }

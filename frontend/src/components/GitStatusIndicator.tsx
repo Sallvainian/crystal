@@ -181,8 +181,8 @@ function getGitStatusConfig(gitStatus: GitStatus): GitStatusConfig {
     }
     
     return {
-      color: 'text-blue-600 dark:text-blue-400',
-      bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+      color: 'text-interactive dark:text-interactive-text',
+      bgColor: 'bg-interactive/10 dark:bg-interactive/20',
       icon: <Edit {...iconProps} />,
       label: 'Uncommitted',
       description: description

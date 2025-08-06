@@ -112,6 +112,32 @@ export function formatJsonForOutput(jsonMessage: any): string {
     return `\r\n\x1b[36m[${timestamp}]\x1b[0m \x1b[90m📝 Session: ${data.status || 'update'}\x1b[0m\r\n`;
   }
   
-  // For other message types, show a generic format
-  return `\r\n\x1b[36m[${timestamp}]\x1b[0m \x1b[90m📄 ${jsonMessage.type}: ${jsonMessage.subtype || 'message'}\x1b[0m\r\n`;
+  // Handle prompt messages from Claude
+  if (jsonMessage.type === 'prompt') {
+    const promptText = jsonMessage.text || jsonMessage.data?.text || 'Waiting for input...';
+    return `\r\n\x1b[36m[${timestamp}]\x1b[0m \x1b[1m\x1b[33m⏳ Claude is waiting for input\x1b[0m\r\n` +
+           `\x1b[93m${promptText}\x1b[0m\r\n\r\n`;
+  }
+  
+  // Handle response messages (Claude might use this type)
+  if (jsonMessage.type === 'response') {
+    const responseText = jsonMessage.text || jsonMessage.data?.text || jsonMessage.content || '';
+    return `\r\n\x1b[36m[${timestamp}]\x1b[0m \x1b[1m\x1b[35m🤖 Claude Response\x1b[0m\r\n` +
+           `\x1b[37m${responseText}\x1b[0m\r\n\r\n`;
+  }
+  
+  // Handle error messages
+  if (jsonMessage.type === 'error') {
+    const errorText = jsonMessage.message || jsonMessage.error || jsonMessage.text || 'An error occurred';
+    const details = jsonMessage.details || jsonMessage.stack || '';
+    return `\r\n\x1b[36m[${timestamp}]\x1b[0m \x1b[1m\x1b[31m❌ Error\x1b[0m\r\n` +
+           `\x1b[91m${errorText}\x1b[0m\r\n` +
+           (details ? `\x1b[90m${details}\x1b[0m\r\n` : '') +
+           `\r\n`;
+  }
+  
+  // For other message types, show a generic format with more details
+  console.log(`[formatJsonForOutput] Unhandled message type: ${jsonMessage.type}`, JSON.stringify(jsonMessage).substring(0, 200));
+  return `\r\n\x1b[36m[${timestamp}]\x1b[0m \x1b[90m📄 ${jsonMessage.type}: ${jsonMessage.subtype || 'message'}\x1b[0m\r\n` +
+         `\x1b[90m${JSON.stringify(jsonMessage, null, 2).substring(0, 500)}...\x1b[0m\r\n`;
 }

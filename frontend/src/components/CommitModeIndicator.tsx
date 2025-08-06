@@ -18,9 +18,9 @@ export const CommitModeIndicator: React.FC<CommitModeIndicatorProps> = ({ mode, 
         return {
           icon: Shield,
           label: 'Structured',
-          color: 'text-blue-600 dark:text-blue-400',
-          bgColor: 'bg-blue-100 dark:bg-blue-900/20',
-          borderColor: 'border-blue-200 dark:border-blue-800',
+          color: 'text-interactive dark:text-interactive-text',
+          bgColor: 'bg-interactive/10 dark:bg-interactive/20',
+          borderColor: 'border-interactive/30 dark:border-interactive/40',
           tooltip: 'Claude handles commits with proper messages'
         };
       case 'checkpoint':

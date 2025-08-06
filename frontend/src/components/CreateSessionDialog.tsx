@@ -285,7 +285,7 @@ export function CreateSessionDialog({ isOpen, onClose, projectName, projectId }:
                   onChange={(value) => setFormData({ ...formData, prompt: value })}
                   projectId={projectId?.toString()}
                   placeholder="Describe your task... (use @ to reference files)"
-                  className="w-full px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-interactive text-text-primary bg-surface-secondary placeholder-text-tertiary"
+                  className="w-full px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-0 focus:border-border-focus text-text-primary bg-surface-secondary placeholder-text-tertiary"
                   isTextarea={true}
                   rows={3}
                 />
@@ -302,7 +302,7 @@ export function CreateSessionDialog({ isOpen, onClose, projectName, projectId }:
                     padding="sm"
                     className={`relative cursor-pointer transition-all ${
                       formData.model === 'claude-sonnet-4-20250514'
-                        ? 'border-interactive bg-interactive/10'
+                        ? 'border-interactive bg-interactive/5'
                         : ''
                     }`}
                     onClick={() => setFormData({ ...formData, model: 'claude-sonnet-4-20250514' })}
@@ -322,7 +322,7 @@ export function CreateSessionDialog({ isOpen, onClose, projectName, projectId }:
                     padding="sm"
                     className={`relative cursor-pointer transition-all ${
                       formData.model === 'claude-opus-4-20250514'
-                        ? 'border-interactive bg-interactive/10'
+                        ? 'border-interactive bg-interactive/5'
                         : ''
                     }`}
                     onClick={() => setFormData({ ...formData, model: 'claude-opus-4-20250514' })}
@@ -342,7 +342,7 @@ export function CreateSessionDialog({ isOpen, onClose, projectName, projectId }:
                     padding="sm"
                     className={`relative cursor-pointer transition-all ${
                       formData.model === 'claude-3-5-haiku-20241022'
-                        ? 'border-status-success bg-status-success/10'
+                        ? 'border-status-success bg-status-success/5'
                         : ''
                     }`}
                     onClick={() => setFormData({ ...formData, model: 'claude-3-5-haiku-20241022' })}
@@ -484,7 +484,7 @@ export function CreateSessionDialog({ isOpen, onClose, projectName, projectId }:
                         const selectedBranch = e.target.value;
                         setFormData({ ...formData, baseBranch: selectedBranch });
                       }}
-                      className="w-full px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-interactive text-text-primary bg-surface-secondary"
+                      className="w-full px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-0 text-text-primary bg-surface-secondary"
                       disabled={isLoadingBranches}
                     >
                       {branches.map((branch, index) => {

@@ -109,8 +109,37 @@ export function setupEventListeners(services: AppServices, getMainWindow: () => 
     }
   });
 
+  // Listen for prompt completed events from sessionManager
+  sessionManager.on('prompt-completed', ({ sessionId }: { sessionId: string }) => {
+    console.log(`[Main] Prompt completed for session: ${sessionId}`);
+    const mw = getMainWindow();
+    if (mw && !mw.isDestroyed()) {
+      mw.webContents.send('prompt:completed', { sessionId });
+    }
+  });
+
   // Listen to claudeCodeManager events
   claudeCodeManager.on('output', async (output: any) => {
+    // Debug log the output type and structure
+    if (output.type === 'json') {
+      console.log(`[Main] Claude output - type: ${output.data?.type}, subtype: ${output.data?.subtype}, first 200 chars:`, JSON.stringify(output.data).substring(0, 200));
+      
+      // Log specific message types to diagnose the issue
+      if (output.data?.type === 'assistant') {
+        console.log(`[Main] ASSISTANT MESSAGE RECEIVED for session ${output.sessionId}`);
+        if (output.data?.message?.content) {
+          const contentPreview = Array.isArray(output.data.message.content) 
+            ? `Array with ${output.data.message.content.length} items`
+            : typeof output.data.message.content === 'string' 
+              ? output.data.message.content.substring(0, 100)
+              : 'Unknown content type';
+          console.log(`[Main] Assistant content preview:`, contentPreview);
+        }
+      }
+    } else if (output.type === 'stdout' || output.type === 'stderr') {
+      console.log(`[Main] Claude raw output (${output.type}) for session ${output.sessionId}, length: ${output.data?.length}`);
+    }
+    
     // Save raw output to database (including JSON)
     sessionManager.addSessionOutput(output.sessionId, {
       type: output.type,
@@ -178,6 +207,44 @@ export function setupEventListeners(services: AppServices, getMainWindow: () => 
   claudeCodeManager.on('exit', async ({ sessionId, exitCode, signal }: { sessionId: string; exitCode: number; signal: string }) => {
     console.log(`[Main] Claude Code exited for session ${sessionId} with code ${exitCode}, signal ${signal}`);
     await sessionManager.setSessionExitCode(sessionId, exitCode);
+    
+    // If Claude exited successfully, mark the current prompt as completed
+    if (exitCode === 0) {
+      try {
+        // Get the database directly to update prompt completion
+        const db = sessionManager.getDatabase();
+        if (db) {
+          db.updatePromptMarkerCompletion(sessionId);
+          console.log(`[Main] Marked prompt as completed for session ${sessionId} on successful exit`);
+          
+          // Emit event to notify frontend to refresh prompts
+          sessionManager.emit('prompt-completed', { sessionId });
+        }
+      } catch (error) {
+        console.error(`[Main] Failed to update prompt completion for session ${sessionId}:`, error);
+      }
+      
+      // Check if Claude responded with any assistant messages
+      const outputs = await sessionManager.getSessionOutputs(sessionId);
+      const hasAssistantResponse = outputs.some(output => 
+        output.type === 'json' && output.data?.type === 'assistant'
+      );
+      
+      if (!hasAssistantResponse) {
+        console.warn(`[Main] Claude exited successfully but sent no assistant response for session ${sessionId}`);
+        // Add a message to indicate Claude didn't respond
+        const timestamp = new Date().toLocaleTimeString();
+        const noResponseMessage = `\r\n\x1b[36m[${timestamp}]\x1b[0m \x1b[1m\x1b[33m⚠️ Claude completed without sending a response\x1b[0m\r\n` +
+                                 `\x1b[90mClaude processed your request but didn't provide any output.\x1b[0m\r\n` +
+                                 `\x1b[90mThis might happen if the request was unclear or if Claude encountered an issue.\x1b[0m\r\n\r\n`;
+        
+        sessionManager.addSessionOutput(sessionId, {
+          type: 'stdout',
+          data: noResponseMessage,
+          timestamp: new Date()
+        });
+      }
+    }
     
     // Get the current session to check its current status
     const session = sessionManager.getSession(sessionId);

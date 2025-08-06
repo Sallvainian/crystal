@@ -88,17 +88,30 @@ export function getAugmentedPath(): string {
  */
 export async function findClaudeExecutable(): Promise<string | null> {
   const platform = os.platform();
-  const executableName = platform === 'win32' ? 'claude.exe' : 'claude';
+  const isWindows = platform === 'win32';
+  
+  // On Windows, check for various script types
+  const executableNames = isWindows 
+    ? ['claude.exe', 'claude.cmd', 'claude.bat', 'claude.ps1', 'claude']
+    : ['claude'];
+    
   const augmentedPath = getAugmentedPath();
-  const paths = augmentedPath.split(platform === 'win32' ? ';' : ':');
+  const paths = augmentedPath.split(isWindows ? ';' : ':');
   
   for (const dir of paths) {
-    const claudePath = path.join(dir, executableName);
-    try {
-      await fs.promises.access(claudePath, fs.constants.X_OK);
-      return claudePath;
-    } catch {
-      // Continue searching
+    for (const execName of executableNames) {
+      const claudePath = path.join(dir, execName);
+      try {
+        await fs.promises.access(claudePath, fs.constants.F_OK);
+        // On Windows, just check if file exists (F_OK)
+        // On Unix, check if it's executable (X_OK)
+        if (!isWindows) {
+          await fs.promises.access(claudePath, fs.constants.X_OK);
+        }
+        return claudePath;
+      } catch {
+        // Continue searching
+      }
     }
   }
   

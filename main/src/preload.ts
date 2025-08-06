@@ -310,6 +310,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
       return () => ipcRenderer.removeListener('folder:deleted', wrappedCallback);
     },
     
+    // Prompt events
+    onPromptCompleted: (callback: (data: { sessionId: string }) => void) => {
+      const wrappedCallback = (_event: any, data: { sessionId: string }) => callback(data);
+      ipcRenderer.on('prompt:completed', wrappedCallback);
+      return () => ipcRenderer.removeListener('prompt:completed', wrappedCallback);
+    },
+    
     onScriptOutput: (callback: (output: any) => void) => {
       const wrappedCallback = (_event: any, output: any) => callback(output);
       ipcRenderer.on('script:output', wrappedCallback);

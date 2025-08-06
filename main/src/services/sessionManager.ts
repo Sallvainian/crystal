@@ -58,6 +58,10 @@ export class SessionManager extends EventEmitter {
     return this.db.getSession(id);
   }
   
+  getDatabase(): DatabaseService {
+    return this.db;
+  }
+  
   getClaudeSessionId(id: string): string | undefined {
     const dbSession = this.db.getSession(id);
     const claudeSessionId = dbSession?.claude_session_id;

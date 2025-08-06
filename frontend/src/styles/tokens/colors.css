@@ -75,21 +75,21 @@
   --color-border-primary: var(--gray-750);
   --color-border-secondary: var(--gray-700);
   --color-border-hover: var(--gray-600);
-  --color-border-focus: var(--blue-500);
+  --color-border-focus: rgb(66 93 150);  /* Muted blue for focus borders */
   
   /* Semantic Tokens - Interactive */
-  --color-interactive-primary: var(--blue-600);
-  --color-interactive-hover: var(--blue-700);
-  --color-interactive-active: var(--blue-500);
-  --color-interactive-text: var(--blue-400);
-  --color-focus-ring: var(--blue-500);
-  --color-interactive-rgb: 37 99 235; /* RGB value for blue-600 */
+  --color-interactive-primary: rgb(66 93 150);     /* Muted blue for dark mode */
+  --color-interactive-hover: rgb(56 79 127);       /* Darker muted blue */
+  --color-interactive-active: rgb(76 107 173);     /* Lighter muted blue */
+  --color-interactive-text: rgb(96 130 196);       /* Soft blue for text */
+  --color-focus-ring: rgb(66 93 150);             /* Match primary interactive */
+  --color-interactive-rgb: 66 93 150;              /* RGB value for muted blue */
   
   /* High-contrast interactive text for dark backgrounds */
-  --color-text-interactive-on-dark: var(--blue-500); /* WCAG AA 4.5:1 against gray-800/900 */
-  --color-text-interactive-on-dark-hover: var(--blue-600);
-  --color-text-interactive-on-dark-active: var(--blue-400);
-  --color-text-interactive-on-dark-focus: var(--blue-500);
+  --color-text-interactive-on-dark: rgb(96 130 196);       /* Muted blue for dark backgrounds */
+  --color-text-interactive-on-dark-hover: rgb(106 145 220); /* Lighter on hover */
+  --color-text-interactive-on-dark-active: rgb(86 117 177); /* Darker on active */
+  --color-text-interactive-on-dark-focus: rgb(96 130 196);  /* Same as default */
   
   /* Interactive surface tokens */
   --color-surface-interactive: var(--gray-800);
@@ -116,7 +116,7 @@
   --color-status-warning-hover: var(--amber-600);
   --color-status-error: var(--red-500);
   --color-status-error-hover: var(--red-600);
-  --color-status-info: var(--blue-500);
+  --color-status-info: rgb(96 130 196);  /* Muted blue for info status */
   --color-status-neutral: var(--gray-400);
   
   /* Context-Aware Text Tokens - Dark Mode */
@@ -187,12 +187,12 @@
   /* Terminal Colors - Dark Theme */
   --color-terminal-bg: rgb(17 24 39);              /* gray-900 */
   --color-terminal-fg: rgb(243 244 246);           /* gray-100 */
-  --color-terminal-cursor: rgb(96 165 250);        /* blue-400 */
+  --color-terminal-cursor: rgb(96 130 196);        /* Muted blue cursor */
   --color-terminal-black: rgb(17 24 39);           /* gray-900 */
   --color-terminal-red: rgb(239 68 68);            /* red-500 */
   --color-terminal-green: rgb(34 197 94);          /* green-500 */
   --color-terminal-yellow: rgb(234 179 8);         /* yellow-500 */
-  --color-terminal-blue: rgb(59 130 246);          /* blue-500 */
+  --color-terminal-blue: rgb(96 130 196);          /* Muted blue */
   --color-terminal-magenta: rgb(168 85 247);       /* purple-500 */
   --color-terminal-cyan: rgb(6 182 212);           /* cyan-500 */
   --color-terminal-white: rgb(243 244 246);        /* gray-100 */

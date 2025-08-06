@@ -229,6 +229,13 @@ export const RichOutputView = React.forwardRef<{ scrollToPrompt: (promptIndex: n
         // Skip tool result messages - they're attached to assistant messages
         
       } else if (msg.type === 'assistant') {
+        console.log('[transformMessages] Processing assistant message:', {
+          has_text: !!msg.text,
+          has_message_content: !!msg.message?.content,
+          message_content_type: Array.isArray(msg.message?.content) ? 'array' : typeof msg.message?.content,
+          timestamp: msg.timestamp
+        });
+        
         const segments: MessageSegment[] = [];
         
         
@@ -237,7 +244,9 @@ export const RichOutputView = React.forwardRef<{ scrollToPrompt: (promptIndex: n
           segments.push({ type: 'text', content: msg.text.trim() });
         } else if (msg.message?.content && Array.isArray(msg.message.content)) {
           // Process each content block
-          msg.message.content.forEach((block: any) => {
+          console.log('[transformMessages] Processing content blocks:', msg.message.content.length);
+          msg.message.content.forEach((block: any, blockIndex: number) => {
+            console.log(`[transformMessages] Block ${blockIndex} type: ${block.type}, has text: ${!!block.text}`);
             if (block.type === 'text' && block.text?.trim()) {
               segments.push({ type: 'text', content: block.text.trim() });
             } else if (block.type === 'thinking') {
@@ -273,6 +282,7 @@ export const RichOutputView = React.forwardRef<{ scrollToPrompt: (promptIndex: n
                seg.content.includes('API Error') ||
                seg.content.includes('error')));
           
+          console.log('[transformMessages] Pushing assistant message with segments:', segments.length, 'role:', isSyntheticError ? 'system' : 'assistant');
           transformed.push({
             id: msg.id || `assistant-${i}-${msg.timestamp}`,
             role: isSyntheticError ? 'system' : 'assistant',
@@ -289,6 +299,8 @@ export const RichOutputView = React.forwardRef<{ scrollToPrompt: (promptIndex: n
               systemSubtype: isSyntheticError ? 'error' : undefined
             }
           });
+        } else {
+          console.warn('[transformMessages] Assistant message has no segments, skipping');
         }
         
       } else if (msg.type === 'system' && msg.subtype === 'init') {
@@ -444,6 +456,10 @@ export const RichOutputView = React.forwardRef<{ scrollToPrompt: (promptIndex: n
       // Combine user prompts with output messages (filter for JSON messages)
       const allMessages = [...userPrompts];
       if (outputResponse.success && outputResponse.data && Array.isArray(outputResponse.data)) {
+        console.log('[RichOutputView] JSON messages from backend:', outputResponse.data.length);
+        console.log('[RichOutputView] JSON message types:', outputResponse.data.map(msg => `${msg.type}${msg.subtype ? ':' + msg.subtype : ''}`));
+        console.log('[RichOutputView] Assistant messages:', outputResponse.data.filter(msg => msg.type === 'assistant').length);
+        
         // JSON messages are already in the correct format from getJsonMessages
         allMessages.push(...outputResponse.data);
       }
@@ -456,7 +472,11 @@ export const RichOutputView = React.forwardRef<{ scrollToPrompt: (promptIndex: n
       });
       
       
+      console.log('[RichOutputView] Transforming messages, total count:', allMessages.length);
+      console.log('[RichOutputView] Message types before transform:', allMessages.map(msg => `${msg.type}${msg.subtype ? ':' + msg.subtype : ''}`));
       const conversationMessages = transformMessages(allMessages);
+      console.log('[RichOutputView] Transformed messages:', conversationMessages.length);
+      console.log('[RichOutputView] Message roles:', conversationMessages.map(msg => msg.role));
       setMessages(conversationMessages);
     } catch (err) {
       console.error('Failed to load messages:', err);

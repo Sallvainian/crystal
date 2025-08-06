@@ -17,7 +17,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
     disabled,
     ...props 
   }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-primary disabled:cursor-not-allowed disabled:opacity-50 rounded';
+    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 rounded';
     
     const variants = {
       primary: 'bg-interactive text-white hover:bg-interactive-hover focus:ring-interactive shadow-button hover:shadow-button-hover',

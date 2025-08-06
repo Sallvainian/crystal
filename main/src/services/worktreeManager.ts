@@ -187,6 +187,10 @@ export class WorktreeManager {
             console.log(`[WorktreeManager] Current process is in worktree directory, changing to project root`);
             process.chdir(projectPath);
           }
+          
+          // Add extra delay on Windows to ensure all file handles are released
+          console.log(`[WorktreeManager] Windows: Waiting additional 3 seconds for file handles to release...`);
+          await new Promise(resolve => setTimeout(resolve, 3000));
         } catch (accessError) {
           console.log(`[WorktreeManager] Worktree directory not accessible: ${accessError}`);
         }
@@ -228,7 +232,7 @@ export class WorktreeManager {
         // Try to find what's locking the directory (Windows only)
         try {
           console.log(`[WorktreeManager] Attempting to find processes using the directory...`);
-          const handleResult = await execWithShellPath(`handle.exe "${worktreePath}" 2>nul`, { cwd: projectPath });
+          const handleResult = await execWithShellPath(`handle.exe "${worktreePath}" 2>NUL`, { cwd: projectPath });
           if (handleResult.stdout) {
             console.log(`[WorktreeManager] Processes using directory:`, handleResult.stdout);
           }
@@ -237,26 +241,42 @@ export class WorktreeManager {
           console.log(`[WorktreeManager] Could not run handle.exe (may not be installed)`);
         }
         
-        // Try alternative removal method on Windows
-        try {
-          console.log(`[WorktreeManager] Attempting alternative removal using rmdir...`);
-          const rmdirCommand = `rmdir /s /q "${worktreePath}"`;
-          console.log(`[WorktreeManager] Executing: ${rmdirCommand}`);
-          const rmdirResult = await execWithShellPath(rmdirCommand, { cwd: projectPath });
-          console.log(`[WorktreeManager] rmdir output:`, rmdirResult.stdout || '(no output)');
-          console.log(`[WorktreeManager] rmdir stderr:`, rmdirResult.stderr || '(no stderr)');
-          console.log(`[WorktreeManager] Successfully removed worktree directory using rmdir`);
-          
-          // Clean up git's worktree tracking
+        // Try alternative removal method on Windows with retries
+        let retryCount = 0;
+        const maxRetries = 3;
+        const retryDelays = [2000, 4000, 8000]; // Exponential backoff
+        
+        while (retryCount < maxRetries) {
           try {
-            await execWithShellPath(`git worktree prune`, { cwd: projectPath });
-          } catch (pruneError) {
-            console.warn(`[WorktreeManager] Failed to prune worktree tracking: ${pruneError}`);
+            if (retryCount > 0) {
+              console.log(`[WorktreeManager] Retry attempt ${retryCount + 1}/${maxRetries} after ${retryDelays[retryCount - 1]}ms delay`);
+              await new Promise(resolve => setTimeout(resolve, retryDelays[retryCount - 1]));
+            }
+            
+            console.log(`[WorktreeManager] Attempting alternative removal using rmdir...`);
+            const rmdirCommand = `rmdir /s /q "${worktreePath}"`;
+            console.log(`[WorktreeManager] Executing: ${rmdirCommand}`);
+            const rmdirResult = await execWithShellPath(rmdirCommand, { cwd: projectPath });
+            console.log(`[WorktreeManager] rmdir output:`, rmdirResult.stdout || '(no output)');
+            console.log(`[WorktreeManager] rmdir stderr:`, rmdirResult.stderr || '(no stderr)');
+            console.log(`[WorktreeManager] Successfully removed worktree directory using rmdir`);
+            
+            // Clean up git's worktree tracking
+            try {
+              await execWithShellPath(`git worktree prune`, { cwd: projectPath });
+            } catch (pruneError) {
+              console.warn(`[WorktreeManager] Failed to prune worktree tracking: ${pruneError}`);
+            }
+            
+            return;
+          } catch (rmdirError: any) {
+            retryCount++;
+            if (retryCount >= maxRetries) {
+              console.error(`[WorktreeManager] Alternative removal failed after ${maxRetries} attempts: ${rmdirError.message}`);
+            } else {
+              console.warn(`[WorktreeManager] rmdir attempt ${retryCount} failed: ${rmdirError.message}`);
+            }
           }
-          
-          return;
-        } catch (rmdirError: any) {
-          console.error(`[WorktreeManager] Alternative removal also failed: ${rmdirError.message}`);
         }
       }
       

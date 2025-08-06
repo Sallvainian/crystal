@@ -219,6 +219,17 @@ export class TerminalSessionManager extends EventEmitter {
         try {
           await execAsync(`taskkill /F /T /PID ${pid}`);
           console.log(`Successfully killed Windows process tree ${pid}`);
+          
+          // Double-check with wmic to ensure process is gone
+          try {
+            const checkResult = await execAsync(`wmic process where ProcessId=${pid} get ProcessId`);
+            if (checkResult.stdout.includes(String(pid))) {
+              console.warn(`Process ${pid} still exists after taskkill, trying again...`);
+              await execAsync(`taskkill /F /PID ${pid}`);
+            }
+          } catch (e) {
+            // Process doesn't exist, which is good
+          }
         } catch (error) {
           console.warn(`Error killing Windows process tree: ${error}`);
           // Fallback: kill descendants individually

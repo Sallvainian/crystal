@@ -1336,6 +1336,22 @@ export class DatabaseService {
 
   // Session output operations
   addSessionOutput(sessionId: string, type: 'stdout' | 'stderr' | 'system' | 'json' | 'error', data: string): void {
+    // Log specific message types for debugging
+    if (type === 'json') {
+      try {
+        const jsonData = JSON.parse(data);
+        if (jsonData.type === 'assistant') {
+          console.log(`[Database] Storing ASSISTANT message for session ${sessionId}`);
+        } else if (jsonData.type === 'prompt') {
+          console.log(`[Database] Storing PROMPT message for session ${sessionId}`);
+        } else {
+          console.log(`[Database] Storing JSON message type: ${jsonData.type} for session ${sessionId}`);
+        }
+      } catch (e) {
+        console.log(`[Database] Storing non-JSON data as type 'json' for session ${sessionId}`);
+      }
+    }
+    
     this.db.prepare(`
       INSERT INTO session_outputs (session_id, type, data)
       VALUES (?, ?, ?)
@@ -1454,11 +1470,23 @@ export class DatabaseService {
   }
 
   updatePromptMarkerCompletion(sessionId: string, timestamp?: string): void {
+    console.log(`[Database] Updating prompt completion for session ${sessionId}`);
+    
+    // First check if there are any prompt markers to update
+    const promptCount = this.db.prepare(`
+      SELECT COUNT(*) as count FROM prompt_markers WHERE session_id = ?
+    `).get(sessionId) as { count: number };
+    
+    if (promptCount.count === 0) {
+      console.warn(`[Database] No prompt markers found for session ${sessionId}`);
+      return;
+    }
+    
     // Update the most recent prompt marker for this session with completion timestamp
     // Use datetime() to ensure proper UTC timestamp handling
     if (timestamp) {
       // If timestamp is provided, use datetime() to normalize it
-      this.db.prepare(`
+      const result = this.db.prepare(`
         UPDATE prompt_markers 
         SET completion_timestamp = datetime(?) 
         WHERE session_id = ? 
@@ -1469,9 +1497,10 @@ export class DatabaseService {
           LIMIT 1
         )
       `).run(timestamp, sessionId, sessionId);
+      console.log(`[Database] Updated ${result.changes} prompt marker(s) with timestamp ${timestamp}`);
     } else {
       // If no timestamp, use current UTC time
-      this.db.prepare(`
+      const result = this.db.prepare(`
         UPDATE prompt_markers 
         SET completion_timestamp = datetime('now') 
         WHERE session_id = ? 
@@ -1482,6 +1511,7 @@ export class DatabaseService {
           LIMIT 1
         )
       `).run(sessionId, sessionId);
+      console.log(`[Database] Updated ${result.changes} prompt marker(s) with current timestamp`);
     }
   }
 

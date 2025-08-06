@@ -13,7 +13,10 @@ export async function setupTestProject() {
   execSync('git init -b main', { cwd: testProjectPath, stdio: 'pipe' });
   execSync('git config user.email "test@example.com"', { cwd: testProjectPath, stdio: 'pipe' });
   execSync('git config user.name "Test User"', { cwd: testProjectPath, stdio: 'pipe' });
-  execSync('touch README.md', { cwd: testProjectPath });
+  
+  // Create README.md in a cross-platform way
+  fs.writeFileSync(path.join(testProjectPath, 'README.md'), '');
+  
   execSync('git add .', { cwd: testProjectPath });
   execSync('git commit -m "Initial commit"', { cwd: testProjectPath });
   

@@ -22,7 +22,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
     
-    const baseStyles = 'px-input-x py-input-y bg-bg-primary text-text-primary placeholder:text-text-muted border rounded-input transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-primary disabled:cursor-not-allowed disabled:opacity-50';
+    const baseStyles = 'px-input-x py-input-y bg-surface-secondary text-text-primary placeholder:text-text-muted border rounded-input transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50';
     
     const stateStyles = error 
       ? 'border-status-error focus:border-status-error focus:ring-status-error'
@@ -98,7 +98,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   }, ref) => {
     const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
     
-    const baseStyles = 'px-input-x py-input-y bg-bg-primary text-text-primary placeholder:text-text-muted border rounded-input transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-primary disabled:cursor-not-allowed disabled:opacity-50 resize-none';
+    const baseStyles = 'px-input-x py-input-y bg-surface-secondary text-text-primary placeholder:text-text-muted border rounded-input transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 resize-none';
     
     const stateStyles = error 
       ? 'border-status-error focus:border-status-error focus:ring-status-error'
