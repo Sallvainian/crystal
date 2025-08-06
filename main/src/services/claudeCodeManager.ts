@@ -746,11 +746,16 @@ export class ClaudeCodeManager extends EventEmitter {
       let hasReceivedOutput = false;
       let lastOutput = '';
       let buffer = '';
+      let streamingMessage = ''; // Accumulate streaming chunks
+      let isStreaming = false;
 
       ptyProcess.onData((data: string) => {
         hasReceivedOutput = true;
         lastOutput += data;
         buffer += data;
+        
+        // Log raw data for debugging
+        console.log(`[ClaudeManager] Raw data received (${data.length} chars):`, data.substring(0, 500));
         
         // Process complete JSON lines
         const lines = buffer.split('\n');
@@ -760,17 +765,61 @@ export class ClaudeCodeManager extends EventEmitter {
           if (line.trim()) {
             try {
               const jsonMessage = JSON.parse(line.trim());
+              console.log(`[ClaudeManager] Parsed JSON message type: ${jsonMessage.type}, object: ${jsonMessage.object}`);
               this.logger?.verbose(`JSON message from session ${sessionId}: ${JSON.stringify(jsonMessage)}`);
               
-              // Emit JSON message only - terminal formatting will be done on the fly
-              this.emit('output', {
-                sessionId,
-                type: 'json',
-                data: jsonMessage,
-                timestamp: new Date()
-              });
+              // Handle streaming chunks from Claude
+              if (jsonMessage.object === 'chat.completion.chunk' && jsonMessage.choices) {
+                const choice = jsonMessage.choices[0];
+                
+                if (choice.delta?.role === 'assistant') {
+                  // Start of streaming message
+                  isStreaming = true;
+                  streamingMessage = '';
+                  console.log(`[ClaudeManager] Started streaming assistant message`);
+                } else if (choice.delta?.content) {
+                  // Accumulate content
+                  streamingMessage += choice.delta.content;
+                  console.log(`[ClaudeManager] Streaming chunk: "${choice.delta.content}"`);
+                }
+                
+                if (choice.finish_reason === 'stop' && isStreaming) {
+                  // End of streaming - emit the complete message in Crystal's expected format
+                  console.log(`[ClaudeManager] Completed streaming message: "${streamingMessage}"`);
+                  isStreaming = false;
+                  
+                  // Emit as assistant message in the format Crystal expects
+                  this.emit('output', {
+                    sessionId,
+                    type: 'json',
+                    data: {
+                      type: 'assistant',
+                      message: {
+                        content: [
+                          { type: 'text', text: streamingMessage }
+                        ]
+                      }
+                    },
+                    timestamp: new Date()
+                  });
+                  
+                  streamingMessage = '';
+                }
+                continue; // Don't emit the chunk itself
+              }
+              
+              // Handle regular Claude messages (non-streaming)
+              if (jsonMessage.type) {
+                this.emit('output', {
+                  sessionId,
+                  type: 'json',
+                  data: jsonMessage,
+                  timestamp: new Date()
+                });
+              }
             } catch (error) {
               // If not valid JSON, treat as regular output
+              console.log(`[ClaudeManager] Non-JSON line:`, line.substring(0, 200));
               this.logger?.verbose(`Raw output from session ${sessionId}: ${line.substring(0, 200)}`);
               
               // Check if this looks like an error message
